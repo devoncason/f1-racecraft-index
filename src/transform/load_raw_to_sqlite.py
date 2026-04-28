@@ -48,6 +48,26 @@ def _read_json_records(path: Path) -> list[dict]:
         return data
     raise ValueError(f"Unexpected JSON structure in {path}")
 
+def _make_dataframe_sqlite_safe(df: pd.DataFrame) -> pd.DataFrame:
+    """Convert nested list/dict values into JSON strings before SQLite loading.
+
+    OpenF1 sometimes returns fields that contain lists, especially in lap/sector
+    data. Pandas cannot drop duplicates on list values, and SQLite cannot store
+    raw Python lists directly. Converting nested values to JSON strings keeps the
+    raw information while making the dataframe safe to deduplicate and save.
+    """
+    df = df.copy()
+
+    def normalize_value(value):
+        if isinstance(value, (list, dict)):
+            return json.dumps(value, sort_keys=True, ensure_ascii=False)
+        return value
+
+    for column in df.columns:
+        if df[column].map(lambda value: isinstance(value, (list, dict))).any():
+            df[column] = df[column].map(normalize_value)
+
+    return df
 
 def _collect_raw_records() -> dict[str, list[dict]]:
     grouped: dict[str, list[dict]] = defaultdict(list)
@@ -87,7 +107,8 @@ def load_raw_json_to_sqlite() -> None:
     with get_connection(DB_PATH) as conn:
         for table, records in sorted(grouped.items()):
             df = pd.DataFrame(records)
+            df = _make_dataframe_sqlite_safe(df)
             df = df.drop_duplicates()
             df.to_sql(table, conn, if_exists="replace", index=False)
             print(f"Loaded {len(df):>5} rows into {table}")
-        conn.commit()
+    conn.commit()
