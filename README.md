@@ -179,6 +179,16 @@ The most important table is `race_driver_features`. It stores one row per driver
 
 ---
 
+## Verify the database
+
+After running the pipeline, confirm that the SQLite database and output tables were created:
+
+```powershell
+.\.venv\Scripts\python.exe check_db.py
+```
+
+---
+
 ## Racecraft Index MVP
 
 The current Racecraft Index is intentionally simple and transparent. It combines:
