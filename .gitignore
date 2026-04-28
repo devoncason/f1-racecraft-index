@@ -216,3 +216,16 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# F1 Racecraft Index generated outputs
+data/raw/*.json
+data/processed/*.sqlite
+data/processed/*.db
+reports/tables/*.csv
+reports/figures/*.png
+
+# Keep folder placeholders
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!reports/tables/.gitkeep
+!reports/figures/.gitkeep
