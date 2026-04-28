@@ -89,25 +89,29 @@ def fetch_weekend_by_meeting(meeting: dict[str, Any]) -> dict[str, Any]:
     save_json([qualifying_session], RAW_DATA_DIR / f"selected_qualifying_session_{qualifying_session_key}.json")
     save_json([race_session], RAW_DATA_DIR / f"selected_race_session_{race_session_key}.json")
 
+    # OpenF1 does not use separate qualifying_result and race_result endpoints.
+    # We call the available session_result endpoint, but save the files using
+    # the filenames expected by the rest of this project.
     endpoint_plan = [
-        ("drivers", race_session_key, False),
-        ("qualifying_result", qualifying_session_key, False),
-        ("starting_grid", race_session_key, True),
-        ("race_result", race_session_key, False),
-        ("laps", race_session_key, False),
-        ("stints", race_session_key, True),
-        ("pit", race_session_key, True),
-        ("position", race_session_key, True),
-        ("intervals", race_session_key, True),
-        ("weather", race_session_key, True),
-        ("race_control", race_session_key, True),
-        ("overtakes", race_session_key, True),
+        # output_name, api_endpoint, session_key, optional
+        ("drivers", "drivers", race_session_key, False),
+        ("qualifying_result", "session_result", qualifying_session_key, False),
+        ("starting_grid", "starting_grid", race_session_key, True),
+        ("race_result", "session_result", race_session_key, False),
+        ("laps", "laps", race_session_key, False),
+        ("stints", "stints", race_session_key, True),
+        ("pit", "pit", race_session_key, True),
+        ("position", "position", race_session_key, True),
+        ("intervals", "intervals", race_session_key, True),
+        ("weather", "weather", race_session_key, True),
+        ("race_control", "race_control", race_session_key, True),
+        ("overtakes", "overtakes", race_session_key, True),
     ]
 
-    for endpoint, session_key, optional in endpoint_plan:
-        label = f"{endpoint}_{session_key}"
-        print(f"Fetching {label}...")
-        records = fetch_openf1(endpoint, {"session_key": session_key}, optional=optional)
+    for output_name, api_endpoint, session_key, optional in endpoint_plan:
+        label = f"{output_name}_{session_key}"
+        print(f"Fetching {label} from OpenF1 endpoint '{api_endpoint}'...")
+        records = fetch_openf1(api_endpoint, {"session_key": session_key}, optional=optional)
         save_json(records, RAW_DATA_DIR / f"{label}.json")
 
     print(f"Finished pulling {year} {meeting_label}.")
