@@ -9,6 +9,7 @@ Open the folder named `f1-racecraft-index`. The folder should contain:
 ```text
 README.md
 main.py
+check_db.py
 requirements.txt
 src/
 sql/
@@ -87,13 +88,23 @@ reports/tables/driver_context_summary.csv
 reports/figures/
 ```
 
-## 9. GitHub upload notes
+## 9. Verify with check_db.py
+
+After a successful run:
+
+```powershell
+.\.venv\Scripts\python.exe check_db.py
+```
+
+
+## 10. GitHub upload notes
 
 Do commit:
 
 ```text
 README.md
 main.py
+check_db.py
 requirements.txt
 .gitignore
 sql/
@@ -107,7 +118,7 @@ reports/tables/.gitkeep
 
 Do not commit generated raw JSON, SQLite database files, PNG charts, or CSV report outputs unless you intentionally want to show sample outputs.
 
-## 10. Replit notes
+## 11. Replit notes
 
 Upload the full project folder or connect the GitHub repository. In Replit Shell:
 
