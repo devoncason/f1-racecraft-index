@@ -29,6 +29,7 @@ The pipeline can:
 ```text
 f1-racecraft-index/
 ├── main.py
+├── check_db.py
 ├── requirements.txt
 ├── README.md
 ├── .gitignore
