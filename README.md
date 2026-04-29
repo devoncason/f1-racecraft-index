@@ -4,7 +4,7 @@ A Python data pipeline for pulling Formula 1 race-weekend data from the OpenF1 A
 
 This project is built around one core question:
 
-> Why did a driver or team overperform or underperform on a given race weekend?
+> Why did a driver or team overperform or underperform on a given Formula 1 race weekend?
 
 The current version focuses on a transparent MVP metric, the **Racecraft Index**, using available weekend-level variables such as starting position, finishing position, qualifying position, overtakes, pit-stop activity, weather, safety-car context, and race-control events. The goal is not to claim a perfect performance model. The goal is to build a clean, explainable, expandable analytics pipeline that can support deeper portfolio-quality Formula 1 analysis over time.
 
@@ -24,6 +24,26 @@ The pipeline can:
 
 ---
 
+## Example output
+
+Test case: **2024 Singapore Grand Prix**
+
+![Successful terminal run](docs/assets/successful_run.png)
+
+![Database verification output](docs/assets/check_db_output.png)
+
+![Sample Racecraft chart](docs/assets/sample_chart.png)
+
+Top Racecraft Index results from the first MVP model:
+
+| Driver | Team | Grid | Finish | Positions Gained | Racecraft Index | Tier |
+|---|---:|---:|---:|---:|---:|---|
+| ZHOU Guanyu | Kick Sauber | 20 | 15 | 5 | 16.36 | strong_overperformance |
+| Charles LECLERC | Ferrari | 9 | 5 | 4 | 14.11 | strong_overperformance |
+| Sergio PEREZ | Red Bull Racing | 13 | 10 | 3 | 9.86 | strong_overperformance |
+
+---
+
 ## Project structure
 
 ```text
@@ -36,30 +56,25 @@ f1-racecraft-index/
 ├── sql/
 │   └── schema.sql
 ├── src/
-│   ├── __init__.py
 │   ├── config.py
 │   ├── db.py
 │   ├── extract/
-│   │   ├── __init__.py
 │   │   ├── openf1_client.py
 │   │   └── fetch_weekend.py
 │   ├── transform/
-│   │   ├── __init__.py
 │   │   └── load_raw_to_sqlite.py
 │   ├── analysis/
-│   │   ├── __init__.py
 │   │   ├── build_race_driver_features.py
 │   │   ├── build_driver_summary.py
 │   │   └── calculate_racecraft_index.py
 │   └── visualize/
-│       ├── __init__.py
 │       └── make_charts.py
 ├── docs/
 │   ├── runbook.md
 │   ├── data_dictionary.md
 │   ├── methodology.md
-│   └── assets
-│       ├── successful_run.md
+│   └── assets/
+│       ├── successful_run.png
 │       ├── check_db_output.png
 │       └── sample_chart.png
 ├── data/
@@ -87,24 +102,19 @@ python --version
 python -m venv .venv
 ```
 
-If PowerShell blocks virtual environment activation on a work computer, use this temporary session-only command:
+If PowerShell blocks virtual environment activation on a work computer, use the virtual environment Python directly instead of activating it:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+If activation works on your computer, you can also use:
 
 ```powershell
 (Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned) ; (& ".\.venv\Scripts\Activate.ps1")
-```
-
-Then install dependencies:
-
-```powershell
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
-```
-
-If activation is blocked or you prefer not to activate the environment, run commands through the virtual environment Python directly:
-
-```powershell
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe main.py --year 2024 --country Singapore
 ```
 
 ---
@@ -114,56 +124,39 @@ If activation is blocked or you prefer not to activate the environment, run comm
 ### Run one race weekend
 
 ```powershell
-python main.py --year 2024 --country Singapore
+.\.venv\Scripts\python.exe main.py --year 2024 --country Singapore
 ```
 
 You can replace the year and country with the race weekend you want to analyze:
 
 ```powershell
-python main.py --year 2023 --country Italy
-python main.py --year 2024 --country Monaco
-python main.py --year 2024 --country Japan
+.\.venv\Scripts\python.exe main.py --year 2024 --country Monaco
+.\.venv\Scripts\python.exe main.py --year 2024 --country Japan
+.\.venv\Scripts\python.exe main.py --year 2024 --country Canada
 ```
 
 For countries with more than one Grand Prix in the same season, add a meeting name to avoid ambiguity:
 
 ```powershell
-python main.py --year 2024 --country United States --meeting-name Miami
+.\.venv\Scripts\python.exe main.py --year 2024 --country United States --meeting-name Miami
 ```
 
 ### Run multiple countries for the same year
 
 ```powershell
-python main.py --year 2024 --countries "Bahrain,Saudi Arabia,Australia,Japan,China,Miami,Monaco,Canada,Spain"
+.\.venv\Scripts\python.exe main.py --year 2024 --countries "Bahrain,Saudi Arabia,Australia,Japan,Monaco,Canada"
 ```
 
 ### Run a full season
 
 ```powershell
-python main.py --season 2024
-```
-
-### Run from a CSV list of weekends
-
-Create a CSV file with columns named `year`, `country`, and optionally `meeting_name`:
-
-```csv
-year,country,meeting_name
-2024,Singapore,
-2024,United States,Miami
-2024,Italy,Monza
-```
-
-Then run:
-
-```powershell
-python main.py --weekends-csv data/weekends_to_pull.csv
+.\.venv\Scripts\python.exe main.py --season 2024
 ```
 
 ### Rebuild database and charts from already downloaded raw JSON
 
 ```powershell
-python main.py --skip-fetch
+.\.venv\Scripts\python.exe main.py --skip-fetch
 ```
 
 ---
@@ -173,7 +166,7 @@ python main.py --skip-fetch
 After a successful run, the project creates:
 
 ```text
-data/raw/                       Raw JSON files from OpenF1
+data/raw/                             Raw JSON files from OpenF1
 data/processed/f1_racecraft.sqlite   SQLite database
 reports/tables/race_driver_features.csv
 reports/tables/driver_context_summary.csv
@@ -185,19 +178,7 @@ reports/figures/context_average_racecraft.png
 The most important table is `race_driver_features`. It stores one row per driver per race weekend and can grow across multiple weekends or seasons.
 
 ---
-## Example Output
 
-Test case: 2024 Singapore Grand Prix
-
-Top Racecraft Index results from the first MVP model:
-
-| Driver | Team | Grid | Finish | Positions Gained | Racecraft Index | Tier |
-|---|---:|---:|---:|---:|---:|---|
-| ZHOU Guanyu | Kick Sauber | 20 | 15 | 5 | 16.36 | strong_overperformance |
-| Charles LECLERC | Ferrari | 9 | 5 | 4 | 14.11 | strong_overperformance |
-| Sergio PEREZ | Red Bull Racing | 13 | 10 | 3 | 9.86 | strong_overperformance |
-
----
 ## Verify the database
 
 After running the pipeline, confirm that the SQLite database and output tables were created:
@@ -220,9 +201,15 @@ The current Racecraft Index is intentionally simple and transparent. It combines
 
 The index should be treated as a first-pass signal, not a final truth. It is useful for surfacing which drivers deserve closer investigation, especially when combined with context variables such as weather, safety-car activity, pit strategy, team, and race-control events.
 
+For details, see:
+
+- [`docs/methodology.md`](docs/methodology.md)
+- [`docs/data_dictionary.md`](docs/data_dictionary.md)
+- [`docs/runbook.md`](docs/runbook.md)
+
 ---
 
-## Known Limitations
+## Known limitations
 
 This project is an MVP portfolio model, not a definitive driver-rating system. Some OpenF1 endpoints are not populated for every weekend. For example, if starting grid data is unavailable, the current pipeline falls back to qualifying result position as a proxy for grid position. That means grid penalties, pit-lane starts, and post-qualifying changes may not be fully captured yet.
 
@@ -254,5 +241,14 @@ This project is designed to be expandable. Strong next improvements include:
 
 ## Data source
 
-This project uses publicly available Formula 1 data from the OpenF1 API.
+This project uses publicly available Formula 1 data from the [OpenF1 API](https://openf1.org/).
 
+---
+
+## Disclaimer
+
+This repository is an independent educational and portfolio project. It is not affiliated with, endorsed by, sponsored by, or associated with Formula 1, Formula One Management, Formula One Licensing B.V., the FIA, OpenF1, any Formula 1 team, or any Formula 1 driver.
+
+Formula 1, F1, FIA Formula One World Championship, Grand Prix names, team names, driver names, circuit names, logos, and related marks are trademarks or property of their respective owners. This project does not claim ownership of any trademarks, logos, race footage, photographs, proprietary timing systems, or official Formula 1 materials.
+
+The analysis is based on publicly available/unofficial API data and is intended for learning, analytics practice, and portfolio demonstration only.
