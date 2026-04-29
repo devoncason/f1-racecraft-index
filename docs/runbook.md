@@ -14,6 +14,7 @@ requirements.txt
 src/
 sql/
 data/
+docs/
 reports/
 ```
 
