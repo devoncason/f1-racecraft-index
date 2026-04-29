@@ -55,7 +55,13 @@ f1-racecraft-index/
 │       ├── __init__.py
 │       └── make_charts.py
 ├── docs/
-│   └── runbook.md
+│   ├── runbook.md
+│   ├── data_dictionary.md
+│   ├── methodology.md
+│   └── assets
+│       ├── successful_run.md
+│       ├── check_db_output.png
+│       └── sample_chart.png
 ├── data/
 │   ├── raw/
 │   │   └── .gitkeep
@@ -179,7 +185,19 @@ reports/figures/context_average_racecraft.png
 The most important table is `race_driver_features`. It stores one row per driver per race weekend and can grow across multiple weekends or seasons.
 
 ---
+## Example Output
 
+Test case: 2024 Singapore Grand Prix
+
+Top Racecraft Index results from the first MVP model:
+
+| Driver | Team | Grid | Finish | Positions Gained | Racecraft Index | Tier |
+|---|---:|---:|---:|---:|---:|---|
+| ZHOU Guanyu | Kick Sauber | 20 | 15 | 5 | 16.36 | strong_overperformance |
+| Charles LECLERC | Ferrari | 9 | 5 | 4 | 14.11 | strong_overperformance |
+| Sergio PEREZ | Red Bull Racing | 13 | 10 | 3 | 9.86 | strong_overperformance |
+
+---
 ## Verify the database
 
 After running the pipeline, confirm that the SQLite database and output tables were created:
@@ -201,6 +219,14 @@ The current Racecraft Index is intentionally simple and transparent. It combines
 - finishing status
 
 The index should be treated as a first-pass signal, not a final truth. It is useful for surfacing which drivers deserve closer investigation, especially when combined with context variables such as weather, safety-car activity, pit strategy, team, and race-control events.
+
+---
+
+## Known Limitations
+
+This project is an MVP portfolio model, not a definitive driver-rating system. Some OpenF1 endpoints are not populated for every weekend. For example, if starting grid data is unavailable, the current pipeline falls back to qualifying result position as a proxy for grid position. That means grid penalties, pit-lane starts, and post-qualifying changes may not be fully captured yet.
+
+The current Racecraft Index is intentionally transparent and explainable. It highlights drivers worth deeper review, but future versions should add stronger pace normalization, teammate comparison, tire degradation, safety car timing, strategy windows, and team baseline performance.
 
 ---
 
