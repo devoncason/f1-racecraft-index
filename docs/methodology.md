@@ -18,12 +18,21 @@ Positive scores suggest overperformance. Negative scores suggest underperformanc
 
 ## Current Formula
 
+```text
 racecraft_index_mvp =
-(2.0 × positions_gained_vs_grid)
-+ (0.75 × positions_gained_vs_quali)
-+ (0.50 × net_overtakes)
-- (0.75 × pit_stop_delta_to_race_avg)
-+ DNF penalty
+    (2.00 × positions_gained_vs_grid)
+  + (0.75 × positions_gained_vs_quali)
+  + (0.50 × net_overtakes)
+  - (0.75 × pit_stop_delta_to_race_avg)
+  + dnf_penalty
+```
+
+## Score Interpretation
+
+- Positive Scores suggest overperformance
+- Negative Scores suggest underperformance
+- Scores should be treated as a first-pass signal, not a final driver rating
+
 
 ## Interpretation
 
