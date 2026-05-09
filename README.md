@@ -4,7 +4,7 @@ A Python data pipeline for pulling Formula 1 race-weekend data from the OpenF1 A
 
 This project is built around one core question:
 
-> Why did a driver or team overperform or underperform on a given Formula 1 race weekend?
+> Which drivers appeared to overperform or underperform on a Formula 1 race weekend, and what race-context signals help explain the result?
 
 The current version focuses on a transparent MVP metric, the **Racecraft Index**, using available weekend-level variables such as starting position, finishing position, qualifying position, overtakes, pit-stop activity, weather, safety-car context, and race-control events. The goal is not to claim a perfect performance model. The goal is to build a clean, explainable, expandable analytics pipeline that can support deeper portfolio-quality Formula 1 analysis over time.
 
@@ -238,6 +238,14 @@ The current Racecraft Index is intentionally transparent and explainable. It hig
 Some OpenF1 weekends may not return data from the `starting_grid` endpoint. When that happens, this project uses qualifying position as the fallback grid position and marks the grid source as `qualifying_result_fallback`.
 
 That fallback keeps the pipeline running, but it is not perfect. Real starting grids can differ from qualifying order because of penalties, pit-lane starts, parc fermé changes, or other race-specific conditions. This is documented in the output through the `grid_source` column.
+
+---
+
+## Portfolio context
+
+This repository is my first public Formula 1 analytics portfolio project and was built as a capstone-style Python data pipeline. It focuses on creating a clean, explainable Racecraft Index MVP.
+
+A future companion project, `f1-racecraft-intelligence`, will build on this foundation with deeper season-level, circuit-level, and context-aware analysis.
 
 ---
 
