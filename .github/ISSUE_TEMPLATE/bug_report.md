@@ -1,10 +1,9 @@
 ---
 name: Bug report
 about: Report a problem with the pipeline, outputs, or documentation
-title: "[BUG]:"
+title: "[Bug]: "
 labels: bug
-assignees: ''
-
+assignees: ""
 ---
 
 ## What happened?
