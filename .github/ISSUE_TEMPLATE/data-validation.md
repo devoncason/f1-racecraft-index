@@ -3,8 +3,7 @@ name: Data validation
 about: Report or discuss race data, OpenF1 endpoint behavior, or result validation
 title: "[Data validation]: "
 labels: data-validation
-assignees: ''
-
+assignees: ""
 ---
 
 ## Race weekend
