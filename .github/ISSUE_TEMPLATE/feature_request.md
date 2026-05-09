@@ -3,8 +3,7 @@ name: Feature request
 about: Suggest a focused improvement for the project
 title: "[Feature]:"
 labels: enhancement
-assignees: ''
-
+assignees: ""
 ---
 
 ## Feature idea
