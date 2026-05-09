@@ -24,6 +24,22 @@ The pipeline can:
 
 ---
 
+## Skills demonstrated
+
+This project demonstrates:
+
+- API data ingestion from OpenF1
+- JSON extraction and local raw-data storage
+- SQLite database design and loading
+- Python data transformation with pandas
+- Driver-level feature engineering
+- Repeatable command-line workflows
+- CSV output generation
+- Matplotlib visualization
+- Documentation, methodology notes, and reproducible project structure
+
+---
+
 ## Example output
 
 Test case: **2024 Singapore Grand Prix**
