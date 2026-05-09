@@ -1,8 +1,10 @@
 blank_issues_enabled: false
+
 contact_links:
   - name: Project README
     url: https://github.com/devoncason/f1-racecraft-index#readme
     about: Start here for setup, usage, project scope, and limitations.
+
   - name: OpenF1 API
     url: https://openf1.org/
     about: Review the public data source used by this project.
